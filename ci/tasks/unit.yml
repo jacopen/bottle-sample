@@ -14,5 +14,5 @@ inputs:
 run:
   path: bottle/ci/tasks/unit.sh
   args: [
-    --input-dir, pcfdemo
+    --input-dir, bottle
   ]
