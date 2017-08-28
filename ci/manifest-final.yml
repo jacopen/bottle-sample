@@ -1,0 +1,7 @@
+---
+applications:
+- name: pcfdemo-production
+  memory: 1024M 
+  instances: 1
+  host: pcfdemo-kkusama-production
+  path: /tmp/build/put/prepare-final/pcfdemo.war
