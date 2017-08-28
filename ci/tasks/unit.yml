@@ -9,10 +9,10 @@ image_resource:
 params:
 
 inputs:
-  - name: pcfdemo
+  - name: bottle
 
 run:
-  path: pcfdemo/ci/tasks/unit.sh
+  path: bottle/ci/tasks/unit.sh
   args: [
     --input-dir, pcfdemo
   ]
