@@ -27,4 +27,5 @@ fi
 
 cd $inputDir
 
+pip install -r requirements.txt
 nosetests
