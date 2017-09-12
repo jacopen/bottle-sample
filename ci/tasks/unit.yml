@@ -1,18 +1,17 @@
 ---
 platform: linux
-
 image_resource:
   type: docker-image
   source:
     repository: python
-
-params:
-
+    tag: 3.6
 inputs:
   - name: bottle
-
+outputs:
+  - name: out
 run:
   path: bottle/ci/tasks/unit.sh
   args: [
     --input-dir, bottle
   ]
+
