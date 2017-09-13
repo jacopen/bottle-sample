@@ -91,6 +91,12 @@ jobs:
       #  passed: [ integration-test ]
       - get: bottle
         passed: [ deploy-staging ]
+      - task: deploy-production
+        file: bottle/ci/tasks/deploy-production.yml
+        params:
+          RANCHER_ACCESS_KEY: {{rancher-env-access-key}}
+          RANCHER_SECRET_KEY: {{rancher-env-secret-key}}
+          RANCHER_URL: {{rancher-env-url}}
       #- get: version
       #  params: { bump: final }
       #- task: prepare-final
