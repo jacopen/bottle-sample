@@ -4,5 +4,7 @@ image_resource:
   type: docker-image
   source:
     repository: jacopen/rancher-cli
+inputs:
+  - name: bottle
 run:
   path: bottle/ci/tasks/scaleout.sh
