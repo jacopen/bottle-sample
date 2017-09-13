@@ -45,8 +45,16 @@ jobs:
   - name: scaleout
     public: true
     plan:
+      - get: bottle
       - task: scaleout
         file: bottle/ci/tasks/scaleout.yml
+        params:
+          RANCHER_ACCESS_KEY: {{rancher-admin-access-key}}
+          RANCHER_SECRET_KEY: {{rancher-admin-secret-key}}
+          RANCHER_URL: {{rancher-admin-url}}
+          OPENSTACK_PASSWORD: {{openstack-password}}
+          OPENSTACK_NET_ID: {{openstack-net-id}}
+          OPENSTACK_USERNAME: {{openstack-username}}
   - name: unit-test
     public: true
     plan:
