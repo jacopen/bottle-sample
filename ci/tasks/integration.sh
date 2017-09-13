@@ -27,4 +27,5 @@ fi
 
 cd $inputDir
 
-#./mvnw clean verify
+pip install -r requirements.txt
+nosetests

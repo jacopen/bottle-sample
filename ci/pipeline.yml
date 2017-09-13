@@ -23,24 +23,6 @@ resources:
       password: {{docker-hub-password}}
       repository: {{docker-hub-repository}}
   
-      #  - name: candidate-release
-      #    type: s3
-      #    source:
-      #      bucket: {{s3-bucket-release-candidates}}
-      #      regexp: pcf-demo-(.*).war
-      #      access_key_id: {{s3-access-key-id}}
-      #      secret_access_key: {{s3-secret-access-key}}
-      #      endpoint: {{s3-endpoint}}
-      #
-      #  - name: final-release
-      #    type: s3
-      #    source:
-      #      bucket: {{s3-bucket-releases}}
-      #      regexp: pcf-demo-(.*).war
-      #      access_key_id: {{s3-access-key-id}}
-      #      secret_access_key: {{s3-secret-access-key}}
-      #      endpoint: {{s3-endpoint}}
-      #
 jobs:
   - name: scaleout
     public: true
@@ -62,7 +44,6 @@ jobs:
         trigger: true
       - task: unit
         file: bottle/ci/tasks/unit.yml
-
   - name: build-image
     serial_groups: [ version ]
     plan:
@@ -84,13 +65,21 @@ jobs:
           RANCHER_ACCESS_KEY: {{rancher-env-access-key}}
           RANCHER_SECRET_KEY: {{rancher-env-secret-key}}
           RANCHER_URL: {{rancher-env-url}}
+  - name: integration-test
+    public: true
+    plan:
+      - get: bottle
+        passed: [ deploy-staging ]
+        trigger: true
+      - task: unit
+        file: bottle/ci/tasks/integration.yml
   - name: ship-it
     serial_groups: [ version ]
     plan:
       #- get: candidate-release
       #  passed: [ integration-test ]
       - get: bottle
-        passed: [ deploy-staging ]
+        passed: [ integration-test ]
       - task: deploy-production
         file: bottle/ci/tasks/deploy-production.yml
         params:
@@ -111,23 +100,6 @@ jobs:
       #  params: { file: build/pcf-demo-*.war }
       #- put: version
       #  params: { file: version/number }
-  
-        #  - name: integration-test
-        #    serial: true
-        #    plan:
-        #      - get: candidate-release
-        #        trigger: true
-        #        passed: [ build-artifact ]
-        #      - get: pcfdemo
-        #        passed: [ build-artifact ]
-        #      - get: version
-        #        passed: [ build-artifact ]
-        #      - task: prepare-integration
-        #        file: pcfdemo/ci/tasks/prepare-integration.yml
-        #      - task: integration
-        #        file: pcfdemo/ci/tasks/integration.yml
-        #        params:
-        #          <<: *MAVENPARAMS
         #
         #  - name: ship-it
         #    serial_groups: [ version ]

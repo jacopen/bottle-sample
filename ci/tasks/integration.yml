@@ -1,17 +1,16 @@
 ---
 platform: linux
-
 image_resource:
   type: docker-image
   source:
-    repository: java
-    tag: '8'
-
+    repository: python
+    tag: 3.6
 inputs:
-  - name: pcfdemo
-
+  - name: bottle
+outputs:
+  - name: out
 run:
-  path: pcfdemo/ci/tasks/integration.sh
+  path: bottle/ci/tasks/integration.sh
   args: [
-    --input-dir, pcfdemo
+    --input-dir, bottle
   ]
