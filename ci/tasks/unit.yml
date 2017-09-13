@@ -14,4 +14,3 @@ run:
   args: [
     --input-dir, bottle
   ]
-

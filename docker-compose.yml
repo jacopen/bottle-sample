@@ -1,0 +1,6 @@
+version: '2'
+services:
+  web:
+    image: "jacopen/testimage"
+    ports:
+     - "38080:8080"

@@ -1,0 +1,17 @@
+---
+platform: linux
+image_resource:
+  type: rancher-cli
+  source:
+    repository: jacopen/rancher-cli
+inputs:
+  - name: bottle
+run:
+  path: bottle/ci/tasks/deploy-staging.sh
+  args: [
+    --input-dir, bottle
+  ]
+params:
+  RANCHER_ACCESS_KEY: {{rancher-env-access-key}}
+  RANCHER_SECRET_KEY: {{rancher-env-secret-key}}
+  RANCHER_URL: {{rancher-env-url}}

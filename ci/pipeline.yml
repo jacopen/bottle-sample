@@ -6,16 +6,23 @@ resources:
       uri: {{github-uri}}
       branch: {{github-branch}}
 
-      #  - name: version
-      #    type: semver
-      #    source:
-      #      bucket: {{s3-bucket-version}}
-      #      initial_version: 1.0.0-rc.0
-      #      key: current-version
-      #      access_key_id: {{s3-access-key-id}}
-      #      secret_access_key: {{s3-secret-access-key}}
-      #      endpoint: {{s3-endpoint}}
-      #
+  #- name: version
+  #  type: semver
+  #  source:
+  #    bucket: {{s3-bucket-version}}
+  #    initial_version: 1.0.0-rc.0
+  #    key: current-version
+  #    access_key_id: {{s3-access-key-id}}
+  #    secret_access_key: {{s3-secret-access-key}}
+  #    endpoint: {{s3-endpoint}}
+  - name: dockerhub
+    type: docker-image
+    source:
+      email: {{docker-hub-email}}
+      username: {{docker-hub-username}}
+      password: {{docker-hub-password}}
+      repository: {{docker-hub-repository}}
+  
       #  - name: candidate-release
       #    type: s3
       #    source:
@@ -53,23 +60,45 @@ jobs:
       - task: unit
         file: bottle/ci/tasks/unit.yml
 
-        #  - name: build-artifact
-        #    serial_groups: [ version ]
-        #    plan:
-        #      - get: pcfdemo
-        #        passed: [ unit-test ]
-        #        trigger: true
-        #      - get: version
-        #        params: { pre: rc }
-        #      - task: build
-        #        file: pcfdemo/ci/tasks/build.yml
-        #        params:
-        #          <<: *MAVENPARAMS
-        #      - put: candidate-release
-        #        params: { file: build/pcf-demo-*.war }
-        #      - put: version
-        #        params: { file: version/number }
-        #
+  - name: build-image
+    serial_groups: [ version ]
+    plan:
+      - get: bottle
+        passed: [ unit-test ]
+        trigger: true
+      - put: dockerhub
+        params:
+          build: bottle
+  - name: deploy-staging
+    serial_groups: [ version ]
+    plan:
+      - get: bottle
+        passed: [ build-image ]
+        trigger: true
+      - task: deploy-staging
+        file: bottle/ci/tasks/deploy-staging.yml
+  - name: ship-it
+    serial_groups: [ version ]
+    plan:
+      #- get: candidate-release
+      #  passed: [ integration-test ]
+      - get: bottle
+        passed: [ deploy-staging ]
+      #- get: version
+      #  params: { bump: final }
+      #- task: prepare-final
+      #  file: pcfdemo/ci/tasks/prepare-final.yml
+      #- put: final-release
+      #  params: { file: prepare-final/pcf-demo-*.war }
+      #- put: version
+      #  params: { file: version/number }
+      #- get: version
+      #  params: { pre: rc }
+      #- put: candidate-release
+      #  params: { file: build/pcf-demo-*.war }
+      #- put: version
+      #  params: { file: version/number }
+  
         #  - name: integration-test
         #    serial: true
         #    plan:
