@@ -41,16 +41,6 @@ resources:
       #      secret_access_key: {{s3-secret-access-key}}
       #      endpoint: {{s3-endpoint}}
       #
-      #  - name: cf
-      #    type: cf
-      #    source:
-      #      api: {{cf-api}}
-      #      username: {{cf-username}}
-      #      password: {{cf-password}}
-      #      organization: {{cf-org}}
-      #      space: {{cf-space}}
-      #      skip_cert_check: true
-
 jobs:
   - name: unit-test
     public: true
@@ -77,6 +67,10 @@ jobs:
         trigger: true
       - task: deploy-staging
         file: bottle/ci/tasks/deploy-staging.yml
+        params:
+          RANCHER_ACCESS_KEY: {{rancher-env-access-key}}
+          RANCHER_SECRET_KEY: {{rancher-env-secret-key}}
+          RANCHER_URL: {{rancher-env-url}}
   - name: ship-it
     serial_groups: [ version ]
     plan:
@@ -111,11 +105,6 @@ jobs:
         #        passed: [ build-artifact ]
         #      - task: prepare-integration
         #        file: pcfdemo/ci/tasks/prepare-integration.yml
-        #        params:
-        #          CF_MANIFEST_HOST: {{cf-manifest-host}}
-        #      - put: cf
-        #        params:
-        #          manifest: prepare-integration/manifest.yml
         #      - task: integration
         #        file: pcfdemo/ci/tasks/integration.yml
         #        params:
