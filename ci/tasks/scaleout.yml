@@ -1,0 +1,15 @@
+---
+platform: linux
+image_resource:
+  type: docker-image
+  source:
+    repository: jacopen/rancher-cli
+run:
+  path: bottle/ci/tasks/scaleout.sh
+params:
+  RANCHER_ACCESS_KEY: {{rancher-admin-access-key}}
+  RANCHER_SECRET_KEY: {{rancher-admin-secret-key}}
+  RANCHER_URL: {{rancher-admin-url}}
+  OPENSTACK_PASSWORD: {{openstack-password}}
+  OPENSTACK_NET_ID: {{openstack-net-id}}
+  OPENSTACK_USERNAME: {{openstack-username}}

@@ -42,6 +42,11 @@ resources:
       #      endpoint: {{s3-endpoint}}
       #
 jobs:
+  - name: scaleout
+    public: true
+    plan:
+      - task: scaleout
+        file: bottle/ci/tasks/scaleout.yml
   - name: unit-test
     public: true
     plan:
